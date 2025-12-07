@@ -503,21 +503,6 @@ export const handleGameEvent = (
     case 'go_to_deck': teleport('ss_anne_exterior'); break;
     case 'enter_1f': teleport('ss_anne_1f'); break;
     case 'enter_b1f': teleport('ss_anne_b1f'); break;
-    case 'go_to_1f':
-        if (currentMap.includes('ss_anne')) teleport('ss_anne_1f');
-        else if (currentMap.includes('tower')) teleport('pokemon_tower_1f');
-        else if (currentMap.includes('dept')) teleport('celadon_dept_store_1f');
-        else if (currentMap.includes('silph')) teleport('silph_co_1f'); // Silph uses _stairs but good fallback
-        else if (currentMap.includes('mansion')) teleport('pokemon_mansion_1f');
-        else if (currentMap.includes('victory')) teleport('victory_road_1f');
-        break;
-    case 'go_to_2f': 
-        if (currentMap.includes('ss_anne')) teleport('ss_anne_2f');
-        else if (currentMap.includes('tower')) teleport('pokemon_tower_2f');
-        else if (currentMap.includes('dept')) teleport('celadon_dept_store_2f');
-        else if (currentMap.includes('mansion')) teleport('pokemon_mansion_2f');
-        else if (currentMap.includes('victory')) teleport('victory_road_2f');
-        break;
     case 'enter_kitchen': teleport('ss_anne_kitchen'); break;
     case 'enter_captains_office': teleport('ss_anne_captains_office'); break;
     case 'exit_to_1f': teleport('ss_anne_1f'); break;
@@ -605,32 +590,7 @@ export const handleGameEvent = (
     case 'name_rater_house': addLog("Giudice Onomastico: 'Bei soprannomi!'"); break;
     case 'exit_to_lavender_town': teleport('lavender_town'); break;
     
-    // Tower Specific Navigation
-    case 'go_to_3f': 
-        if (currentMap.includes('tower')) teleport('pokemon_tower_3f');
-        else if (currentMap.includes('dept')) teleport('celadon_dept_store_3f');
-        else if (currentMap.includes('silph')) teleport('silph_co_3f');
-        else if (currentMap.includes('mansion')) teleport('pokemon_mansion_3f');
-        else if (currentMap.includes('victory')) teleport('victory_road_3f');
-        break;
-    case 'go_to_4f': 
-        if (currentMap.includes('tower')) teleport('pokemon_tower_4f');
-        else if (currentMap.includes('dept')) teleport('celadon_dept_store_4f');
-        else if (currentMap.includes('silph')) teleport('silph_co_4f');
-        break;
-    case 'go_to_5f': 
-        if (currentMap.includes('tower')) teleport('pokemon_tower_5f');
-        else if (currentMap.includes('dept')) teleport('celadon_dept_store_5f');
-        else if (currentMap.includes('silph')) teleport('silph_co_5f');
-        break;
-    case 'go_to_6f': 
-        if (currentMap.includes('tower')) teleport('pokemon_tower_6f');
-        else if (currentMap.includes('silph')) teleport('silph_co_6f');
-        break;
-    case 'go_to_7f': 
-        if (currentMap.includes('tower')) teleport('pokemon_tower_7f');
-        else if (currentMap.includes('silph')) teleport('silph_co_7f');
-        break;
+    // Tower/Tower Navigation cases handled in generic block
 
     case 'rival_encounter_tower':
         if(!flags['rival_5_tower_defeated']) {
@@ -719,10 +679,6 @@ export const handleGameEvent = (
     case 'exit_to_game_corner': teleport('celadon_city'); break;
     
     // Explicit Rocket Hideout
-    case 'go_to_b1f': 
-        if (currentMap.includes('mansion')) teleport('pokemon_mansion_b1f');
-        else teleport('rocket_hideout_b1f'); 
-        break;
     case 'go_to_b2f': teleport('rocket_hideout_b2f'); break;
     case 'go_to_b3f': teleport('rocket_hideout_b3f'); break;
     case 'go_to_b4f': teleport('rocket_hideout_b4f'); break;
@@ -824,7 +780,7 @@ export const handleGameEvent = (
         teleport('underground_path_west_east');
         break;
 
-    // --- ROUTE 12-15 ---
+    // --- ROUTE 12-15 & 16 ---
     case 'snorlax_block': 
         if(hasItem('poke_flute')) {
             addLog("Suoni il Poké Flauto! Snorlax attacca!");
@@ -841,6 +797,22 @@ export const handleGameEvent = (
             addLog("Uno Snorlax dorme profondamente. Serve un flauto per svegliarlo.");
         }
         break;
+    case 'snorlax_block_cycling_road':
+        if(hasItem('poke_flute')) {
+            addLog("Suoni il Poké Flauto! Snorlax attacca!");
+            startBattle({pokemonId: 143, level: 30}, false);
+        } else {
+            addLog("Snorlax dorme. Serve un flauto.");
+        }
+        break;
+    case 'secret_house_fly':
+        if (!flags['hm02Obtained']) {
+            addLog("Ragazza: 'Mio padre si è perso? Oh, grazie per non dirlo a nessuno! Prendi questo!'");
+            addItem('hm02', 1); setFlag('hm02Obtained', true); addLog("Hai ottenuto MN02 (Volo)!");
+        } else {
+            addLog("Ragazza: 'Volo è utile per tornare in città già visitate.'");
+        }
+        break;
     case 'enter_digletts_cave': teleport('digletts_cave'); break;
     case 'exit_to_route_11': teleport('route_11'); break;
     case 'exit_to_route_2': teleport('route_2_east'); break;
@@ -850,14 +822,6 @@ export const handleGameEvent = (
     case 'cycling_road_gate_east': case 'cycling_road_gate_west':
         if(hasItem('bicycle')) { addLog("Guardia: 'Hai una bici! Vai pure!'"); teleport('route_17'); }
         else { addLog("Guardia: 'Solo biciclette ammesse.'"); }
-        break;
-    case 'snorlax_block_cycling_road':
-        if(hasItem('poke_flute')) {
-            addLog("Suoni il Poké Flauto! Snorlax attacca!");
-            startBattle({pokemonId: 143, level: 30}, false);
-        } else {
-            addLog("Snorlax dorme. Serve un flauto.");
-        }
         break;
 
     // --- FUCHSIA & SAFARI ---
@@ -943,26 +907,27 @@ export const handleGameEvent = (
     case 'ladder_to_b4f': teleport('seafoam_islands_b4f'); break;
 
     // CONTEXT AWARE TELEPORTS (Fixes Ship/Tower/Dept Store Mixing)
+    // Ensures unambiguous navigation between multi-floor areas sharing generic event IDs
     case 'go_to_1f':
         if (currentMap.includes('ss_anne')) teleport('ss_anne_1f');
         else if (currentMap.includes('pokemon_tower')) teleport('pokemon_tower_1f');
         else if (currentMap.includes('celadon_dept')) teleport('celadon_dept_store_1f');
         else if (currentMap.includes('silph')) teleport('silph_co_1f');
-        else if (currentMap.includes('mansion')) teleport('pokemon_mansion_1f');
+        else if (currentMap.includes('pokemon_mansion')) teleport('pokemon_mansion_1f');
         else if (currentMap.includes('victory')) teleport('victory_road_1f');
         break;
     case 'go_to_2f': 
         if (currentMap.includes('ss_anne')) teleport('ss_anne_2f');
         else if (currentMap.includes('pokemon_tower')) teleport('pokemon_tower_2f');
         else if (currentMap.includes('celadon_dept')) teleport('celadon_dept_store_2f');
-        else if (currentMap.includes('mansion')) teleport('pokemon_mansion_2f');
+        else if (currentMap.includes('pokemon_mansion')) teleport('pokemon_mansion_2f');
         else if (currentMap.includes('victory')) teleport('victory_road_2f');
         break;
     case 'go_to_3f': 
         if (currentMap.includes('pokemon_tower')) teleport('pokemon_tower_3f');
         else if (currentMap.includes('celadon_dept')) teleport('celadon_dept_store_3f');
         else if (currentMap.includes('silph')) teleport('silph_co_3f');
-        else if (currentMap.includes('mansion')) teleport('pokemon_mansion_3f');
+        else if (currentMap.includes('pokemon_mansion')) teleport('pokemon_mansion_3f');
         else if (currentMap.includes('victory')) teleport('victory_road_3f');
         break;
     case 'go_to_4f': 
@@ -982,6 +947,12 @@ export const handleGameEvent = (
     case 'go_to_7f': 
         if (currentMap.includes('pokemon_tower')) teleport('pokemon_tower_7f');
         else if (currentMap.includes('silph')) teleport('silph_co_7f');
+        break;
+    
+    // BASEMENT CONTEXT AWARE (Hideout vs Mansion)
+    case 'go_to_b1f': 
+        if (currentMap.includes('pokemon_mansion')) teleport('pokemon_mansion_b1f');
+        else teleport('rocket_hideout_b1f'); // Default for generic b1f trigger
         break;
 
     default:

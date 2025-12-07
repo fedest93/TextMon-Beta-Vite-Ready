@@ -932,7 +932,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       let newFlags = { ...currentState.flags }; // CLONE FLAGS FOR SYNCHRONOUS UPDATE
       let newMoney = currentState.player.money;
       let nextMode = currentState.mode;
-      let pendingMove = undefined;
+      let pendingMove: PendingMove | undefined = undefined;
       let pendingEvo = undefined;
 
       // --- 1. CHECK MOVE LEARNING (PRIORITY OVER TRAINER SWITCH) ---
@@ -962,7 +962,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                                       pokemonIndex: newParty.findIndex(p => p.uniqueId === winner.uniqueId),
                                       moveId: lm.moveId,
                                       moveName: moveData.name,
-                                      source: { type: 'level' }
+                                      source: { type: 'level' as const }
                                   };
                                   addLog(`${winner.name} vuole imparare ${moveData.name}...`);
                               }
